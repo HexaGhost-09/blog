@@ -25,7 +25,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet" />
   </head>
   <body>
-    <header class="site-header"><div class="wrap"><a class="brand" href={`${base}/`}>HexaGhost</a><nav class="site-nav" aria-label="Main"><a href="https://github.com/HexaGhost-09">GitHub</a></nav></div></header>
+    <header class="site-header"><div class="wrap"><a class="brand" href={`${base}/`}>HexaGhost</a><nav class="site-nav" aria-label="Main"><a href={`${base}/blog/`}>Blog posts</a><a href="https://github.com/HexaGhost-09">GitHub</a></nav></div></header>
     <main><div class="wrap"><slot /></div></main>
     <footer class="site-footer"><div class="wrap">&copy; {new Date().getFullYear()} HexaGhost</div></footer>
   </body>
