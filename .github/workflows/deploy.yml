@@ -21,15 +21,65 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Configure GitHub Pages
+        id: pages
         uses: actions/configure-pages@v5
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
       - name: Install dependencies
-        run: npm install
-      - name: Build
-        run: npm run build
+        run: npm ci
+      - name: Build for Pages URL
+        env:
+          PAGES_ORIGIN: ${{ steps.pages.outputs.origin }}
+          PAGES_BASE: ${{ steps.pages.outputs.base_path }}
+        run: npm run build -- --site "$PAGES_ORIGIN" --base "${PAGES_BASE:-/}"
+      - name: Preserve static assets
+        run: touch dist/.nojekyll
+      - name: Validate generated stylesheets
+        env:
+          PAGES_BASE: ${{ steps.pages.outputs.base_path }}
+        run: |
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          from html.parser import HTMLParser
+          from urllib.parse import urlsplit, unquote
+          root = Path('dist').resolve()
+          base = os.environ.get('PAGES_BASE', '').rstrip('/')
+          class Styles(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.links = []
+                  self.inline = False
+              def handle_starttag(self, tag, attrs):
+                  attrs = dict(attrs)
+                  if tag == 'style':
+                      self.inline = True
+                  if tag == 'link' and 'stylesheet' in attrs.get('rel', '').split():
+                      self.links.append(attrs.get('href', ''))
+          pages = list(root.rglob('*.html'))
+          assert pages, 'No HTML generated'
+          for page in pages:
+              parser = Styles()
+              parser.feed(page.read_text())
+              local = 0
+              for href in parser.links:
+                  url = urlsplit(href)
+                  if url.scheme or url.netloc:
+                      continue
+                  local += 1
+                  path = unquote(url.path)
+                  if path.startswith('/'):
+                      assert not base or path.startswith(base + '/'), f'{page}: CSS outside Pages base: {href}'
+                      asset = root / path[len(base):].lstrip('/')
+                  else:
+                      asset = page.parent / path
+                  assert asset.is_file() and asset.stat().st_size, f'{page}: missing CSS: {href}'
+              assert local or parser.inline, f'{page}: no local or inline CSS'
+          print(f'Validated stylesheets in {len(pages)} HTML pages')
+          PY
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
