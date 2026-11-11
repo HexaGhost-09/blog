@@ -12,15 +12,22 @@ const fmt = (d: Date) =>
 
 <Base title="HexaGhost">
   <section class="hero">
-    <h1>HexaGhost</h1>
-    <p>Build logs and notes on ChromeOS, Linux and the things I tinker with.</p>
+    <p class="eyebrow">HEXAGHOST</p>
+    <h1>Build logs & notes</h1>
+    <p>ChromeOS, Linux, Android and the things I tinker with.</p>
   </section>
   {posts.length === 0 ? (
     <p class="empty">No posts yet. Add a Markdown file to <code>src/content/blog/</code> to publish one.</p>
   ) : (
     <ul class="posts">
       {posts.map((post) => (
-        <li><time datetime={post.data.pubDate.toISOString()}>{fmt(post.data.pubDate)}</time><div><h2><a href={`${base}/blog/${post.id}/`}>{post.data.title}</a></h2><p>{post.data.description}</p></div></li>
+        <li class="post-card">
+          <a href={`${base}/blog/${post.id}/`}>
+            <time datetime={post.data.pubDate.toISOString()}>{fmt(post.data.pubDate)}</time>
+            <h2>{post.data.title}</h2>
+            <p>{post.data.description}</p>
+          </a>
+        </li>
       ))}
     </ul>
   )}

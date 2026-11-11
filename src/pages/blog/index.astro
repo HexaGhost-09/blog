@@ -20,13 +20,15 @@ const fmt = (d: Date) =>
     ) : (
       <ul class="posts">
         {posts.map((post) => (
-          <li>
-            <time datetime={post.data.pubDate.toISOString()}>{fmt(post.data.pubDate)}</time>
-            <div>
-              <h2><a href={`${base}/blog/${post.id}/`}>{post.data.title}</a></h2>
+          <li class="post-card">
+            <a href={`${base}/blog/${post.id}/`}>
+              <time datetime={post.data.pubDate.toISOString()}>{fmt(post.data.pubDate)}</time>
+              <h2>{post.data.title}</h2>
               <p>{post.data.description}</p>
-              {post.data.tags.length > 0 && <div class="archive-tags">{post.data.tags.map((tag) => <span>{tag}</span>)}</div>}
-            </div>
+              {post.data.tags.length > 0 && (
+                <div class="archive-tags">{post.data.tags.map((tag) => <span>{tag}</span>)}</div>
+              )}
+            </a>
           </li>
         ))}
       </ul>
