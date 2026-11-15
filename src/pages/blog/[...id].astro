@@ -4,11 +4,14 @@ import Giscus from '../../components/Giscus.astro';
 import { sanity, postQuery } from '../../lib/sanity';
 import { marked } from 'marked';
 
-const posts = await sanity.fetch(postQuery);
 export async function getStaticPaths() {
-  return posts.map((post: any) => ({ params: { id: post.slug } }));
+  const posts = await sanity.fetch(postQuery);
+  return posts.map((post: any) => ({
+    params: { id: post.slug },
+    props: { post },
+  }));
 }
-const post = posts.find((item: any) => item.slug === Astro.params.id);
+const post = Astro.props.post;
 if (!post) return Astro.redirect('/blog/');
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const date = new Date(post.publishedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
