@@ -17,16 +17,136 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{fullTitle}</title>
     <meta name="description" content={description} />
+    <meta name="theme-color" content="#101a17" />
+    <title>{fullTitle}</title>
     <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet" />
   </head>
-  <body>
-    <header class="site-header"><div class="wrap"><a class="brand" href={`${base}/`}>HexaGhost</a><nav class="site-nav" aria-label="Main"><a href={`${base}/blog/`}>Blog posts</a><a href="https://github.com/HexaGhost-09">GitHub</a></nav></div></header>
-    <main><div class="wrap"><slot /></div></main>
-    <footer class="site-footer"><div class="wrap">&copy; {new Date().getFullYear()} HexaGhost</div></footer>
+  <body data-base={base}>
+    <header class="site-header">
+      <div class="header-inner">
+        <button class="menu-toggle" type="button" aria-label="Open side menu" aria-expanded="false" aria-controls="site-sidebar" data-menu-toggle>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+        </button>
+        <a class="brand" href={`${base}/`} aria-label="HexaGhost home">
+          <span class="brand-mark" aria-hidden="true">H</span><span>HexaGhost</span>
+        </a>
+        <nav class="site-nav" aria-label="Quick links">
+          <a href={`${base}/blog/`} aria-label="Blog posts" title="Blog posts">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.75A1.75 1.75 0 0 1 6.75 3H20v16H6.75A1.75 1.75 0 0 0 5 20.75zM5 4.75v16M8.5 7h8M8.5 10.5h8" /></svg><span>Posts</span>
+          </a>
+          <a href="https://github.com/HexaGhost-09" aria-label="GitHub profile" title="GitHub">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-4.2 1.3-4.2-2.1-5.9-2.5M14.9 21v-3.4a3 3 0 0 0-.8-2.3c2.7-.3 5.5-1.3 5.5-6A4.7 4.7 0 0 0 18.3 6a4.3 4.3 0 0 0-.1-3.2S17.2 2.5 14.9 4a12 12 0 0 0-6 0C6.6 2.5 5.6 2.8 5.6 2.8A4.3 4.3 0 0 0 5.5 6a4.7 4.7 0 0 0-1.3 3.3c0 4.7 2.8 5.7 5.5 6a3 3 0 0 0-.8 2.3V21" /></svg><span>GitHub</span>
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="site-shell">
+      <button class="sidebar-backdrop" type="button" aria-label="Close side menu" data-menu-close></button>
+      <aside class="site-sidebar" id="site-sidebar" aria-label="Site menu">
+        <div class="sidebar-heading">MENU</div>
+        <nav class="sidebar-nav" aria-label="Site navigation">
+          <a href={`${base}/`}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z" /></svg>Home</a>
+          <a href={`${base}/blog/`}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.75A1.75 1.75 0 0 1 6.75 3H20v16H6.75A1.75 1.75 0 0 0 5 20.75zM5 4.75v16M8.5 7h8M8.5 10.5h8" /></svg>All posts</a>
+          <a href="https://github.com/HexaGhost-09" target="_blank" rel="noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-4.2 1.3-4.2-2.1-5.9-2.5M14.9 21v-3.4a3 3 0 0 0-.8-2.3c2.7-.3 5.5-1.3 5.5-6A4.7 4.7 0 0 0 18.3 6a4.3 4.3 0 0 0-.1-3.2S17.2 2.5 14.9 4a12 12 0 0 0-6 0C6.6 2.5 5.6 2.8 5.6 2.8A4.3 4.3 0 0 0 5.5 6a4.7 4.7 0 0 0-1.3 3.3c0 4.7 2.8 5.7 5.5 6a3 3 0 0 0-.8 2.3V21" /></svg>GitHub profile</a>
+        </nav>
+
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-heading">SEARCH THE BLOG</div>
+        <label class="search-box">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8" /><path d="m16 16 5 5" /></svg>
+          <input type="search" placeholder="Search posts..." autocomplete="off" aria-label="Search blog posts" data-site-search />
+          <kbd>/</kbd>
+        </label>
+        <div class="search-results" data-search-results aria-live="polite"></div>
+        <p class="sidebar-hint">Search titles, topics and full post content.</p>
+        <div class="sidebar-bottom">
+          <span class="status-dot"></span> Personal blog &amp; build notes
+        </div>
+      </aside>
+
+      <main class="site-main"><div class="wrap"><slot /></div></main>
+    </div>
+
+    <footer class="site-footer"><div class="wrap">&copy; {new Date().getFullYear()} HexaGhost <span>· Built with Astro</span></div></footer>
+
+    <script is:inline>
+      (() => {
+        const body = document.body;
+        const base = body.dataset.base || '';
+        const sidebar = document.querySelector('[data-menu-toggle]');
+        const close = document.querySelector('[data-menu-close]');
+        const setMenu = (open) => {
+          body.classList.toggle('sidebar-open', open);
+          sidebar?.setAttribute('aria-expanded', String(open));
+          sidebar?.setAttribute('aria-label', open ? 'Close side menu' : 'Open side menu');
+        };
+        sidebar?.addEventListener('click', () => setMenu(!body.classList.contains('sidebar-open')));
+        close?.addEventListener('click', () => setMenu(false));
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') setMenu(false);
+          if (event.key === '/' && !['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) {
+            event.preventDefault();
+            document.querySelector('[data-site-search]')?.focus();
+          }
+        });
+
+        const input = document.querySelector('[data-site-search]');
+        const resultsBox = document.querySelector('[data-search-results]');
+        let indexPromise;
+        const loadIndex = () => indexPromise ||= fetch(base + '/search-index.json').then((response) => {
+          if (!response.ok) throw new Error('Search index unavailable');
+          return response.json();
+        });
+        const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({
+          '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        })[char]);
+        const renderResults = async () => {
+          const query = input.value.trim().toLowerCase();
+          if (!query) {
+            resultsBox.innerHTML = '<p class="search-empty">Type to search all posts.</p>';
+            return;
+          }
+          resultsBox.innerHTML = '<p class="search-empty">Searching…</p>';
+          try {
+            const posts = await loadIndex();
+            const terms = query.split(/\s+/).filter(Boolean);
+            const matches = posts.map((post) => {
+              const title = post.title.toLowerCase();
+              const description = post.description.toLowerCase();
+              const tags = post.tags.join(' ').toLowerCase();
+              const content = post.content.toLowerCase();
+              let score = 0;
+              for (const term of terms) {
+                if (title.includes(term)) score += 12;
+                if (description.includes(term)) score += 5;
+                if (tags.includes(term)) score += 7;
+                if (content.includes(term)) score += 1;
+              }
+              return { post, score };
+            }).filter((item) => item.score > 0).sort((a, b) => b.score - a.score).slice(0, 7);
+            if (!matches.length) {
+              resultsBox.innerHTML = '<p class="search-empty">No posts found. Try another keyword.</p>';
+              return;
+            }
+            resultsBox.innerHTML = matches.map(({ post }) =>
+              '<a class="search-result" href="' + escapeHtml(base + '/blog/' + post.slug + '/') + '">' +
+                '<span>' + escapeHtml(post.title) + '</span>' +
+                '<small>' + escapeHtml(post.date) + ' · ' + escapeHtml(post.description) + '</small>' +
+              '</a>'
+            ).join('');
+          } catch {
+            resultsBox.innerHTML = '<p class="search-empty">Search index is not available yet. Try again after the site rebuilds.</p>';
+          }
+        };
+        input?.addEventListener('input', renderResults);
+        input?.addEventListener('focus', () => { if (!input.value) resultsBox.innerHTML = '<p class="search-empty">Type to search all posts.</p>'; });
+        if (resultsBox) resultsBox.innerHTML = '<p class="search-empty">Type to search all posts.</p>';
+      })();
+    </script>
   </body>
 </html>
