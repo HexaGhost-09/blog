@@ -1,21 +1,26 @@
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import markdoc from '@astrojs/markdoc';
-import keystatic from '@keystatic/astro';
+import sanity from '@sanity/astro';
 import vercel from '@astrojs/vercel';
 
-const isGitHubPagesBuild = process.env.GITHUB_ACTIONS === 'true';
+const projectId = process.env.SANITY_PROJECT_ID;
+const dataset = process.env.SANITY_DATASET || 'production';
 
 export default defineConfig({
-  // GitHub Pages stays a static build. Vercel runs the server routes required
-  // by Keystatic's GitHub OAuth and content editor.
   site: 'https://blog666666666667777777777.vercel.app',
   base: '/',
-  output: isGitHubPagesBuild ? 'static' : 'server',
-  adapter: isGitHubPagesBuild ? undefined : vercel(),
+  output: process.env.GITHUB_ACTIONS === 'true' ? 'static' : 'server',
+  adapter: process.env.GITHUB_ACTIONS === 'true' ? undefined : vercel(),
   integrations: [
     react(),
     markdoc(),
-    ...(!isGitHubPagesBuild ? [keystatic()] : []),
+    ...(projectId ? [sanity({
+      projectId,
+      dataset,
+      apiVersion: '2026-03-01',
+      useCdn: true,
+      studioBasePath: '/admin',
+    })] : []),
   ],
 });
