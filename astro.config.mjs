@@ -4,7 +4,7 @@ import markdoc from '@astrojs/markdoc';
 import sanity from '@sanity/astro';
 import vercel from '@astrojs/vercel';
 
-const isGitHubPagesBuild = process.env.GITHUB_ACTIONS === 'true';
+const isGitHubPagesBuild = process.env.PAGES_BUILD === 'true';
 
 export default defineConfig({
   site: 'https://blog666666666667777777777.vercel.app',
