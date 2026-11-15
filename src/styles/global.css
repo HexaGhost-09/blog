@@ -280,3 +280,12 @@ h1, h2, h3 { font-family: var(--font-head); line-height: 1.15; letter-spacing: -
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+@media (max-width: 420px) {
+  .header-inner { gap: .55rem; }
+  .brand { margin-right: auto; font-size: 1rem; }
+  .site-nav { gap: 0; }
+  .site-nav a { padding: .4rem; }
+  .site-nav a span { display: none; }
+  .menu-toggle { padding: .4rem; }
+}
