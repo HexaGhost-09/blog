@@ -1,7 +1,7 @@
 import { defineConfig } from 'sanity';
 import { structureTool } from 'sanity/structure';
 
-const projectId = process.env.SANITY_PROJECT_ID || 'replace-with-project-id';
+const projectId = process.env.SANITY_PROJECT_ID || 'k4jysu6x';
 const dataset = process.env.SANITY_DATASET || 'production';
 
 export default defineConfig({
