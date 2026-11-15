@@ -3,24 +3,20 @@ const repo = 'HexaGhost-09/blog';
 const repoId = 'R_kgDOVmddxQ';
 const category = 'General';
 const categoryId = 'DIC_kwDOVmddxc4DLMas';
-const configured = Boolean(repoId && categoryId);
-const theme = 'https://raw.githubusercontent.com/HexaGhost-09/blog/main/public/giscus-theme.css';
+// jsDelivr serves GitHub files with the CORS headers required by Giscus custom themes.
+const theme = 'https://cdn.jsdelivr.net/gh/HexaGhost-09/blog@main/public/giscus-theme.css';
 ---
 
 <div class="giscus-shell">
-  {configured ? (
-    <div
-      class="giscus"
-      data-giscus
-      data-repo={repo}
-      data-repo-id={repoId}
-      data-category={category}
-      data-category-id={categoryId}
-      data-theme={theme}
-    ></div>
-  ) : (
-    <p class="giscus-setup">Comments are ready to connect. Add the Giscus repository and category IDs to the site's public environment variables to activate the discussion widget.</p>
-  )}
+  <div
+    class="giscus"
+    data-giscus
+    data-repo={repo}
+    data-repo-id={repoId}
+    data-category={category}
+    data-category-id={categoryId}
+    data-theme={theme}
+  ></div>
 </div>
 
 <script>
