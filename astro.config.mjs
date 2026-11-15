@@ -4,23 +4,22 @@ import markdoc from '@astrojs/markdoc';
 import sanity from '@sanity/astro';
 import vercel from '@astrojs/vercel';
 
-const projectId = process.env.SANITY_PROJECT_ID;
-const dataset = process.env.SANITY_DATASET || 'production';
+const isGitHubPagesBuild = process.env.GITHUB_ACTIONS === 'true';
 
 export default defineConfig({
   site: 'https://blog666666666667777777777.vercel.app',
   base: '/',
-  output: process.env.GITHUB_ACTIONS === 'true' ? 'static' : 'server',
-  adapter: process.env.GITHUB_ACTIONS === 'true' ? undefined : vercel(),
+  output: isGitHubPagesBuild ? 'static' : 'server',
+  adapter: isGitHubPagesBuild ? undefined : vercel(),
   integrations: [
     react(),
     markdoc(),
-    ...(projectId ? [sanity({
-      projectId,
-      dataset,
+    sanity({
+      projectId: 'k4jysu6x',
+      dataset: 'production',
       apiVersion: '2026-03-01',
-      useCdn: true,
+      useCdn: isGitHubPagesBuild,
       studioBasePath: '/admin',
-    })] : []),
+    }),
   ],
 });
