@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Giscus from '../../components/Giscus.astro';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -56,15 +57,15 @@ const author = post.data.author || 'HexaGhost';
       </div>
     </section>
 
-    <section class="comments-placeholder" aria-labelledby="comments-title">
+    <section class="comments-section" aria-labelledby="comments-title">
       <div class="comments-heading">
         <div>
           <p class="eyebrow">JOIN THE CONVERSATION</p>
           <h2 id="comments-title">Comments</h2>
         </div>
-        <span class="coming-soon">Coming soon</span>
+        <span class="comments-note">Powered by GitHub Discussions</span>
       </div>
-      <p>Comments will be available here in a future update. A discussion system will be connected later.</p>
+      <Giscus />
     </section>
 
     <a class="back" href={base + '/blog/'}>← All blog posts</a>
