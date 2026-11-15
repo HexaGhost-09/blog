@@ -1,79 +1,101 @@
-/* HexaGhost comment theme — mirrors the site's green, card-based UI. */
-:root {
-  color-scheme: light;
-  --color-canvas-default: #ffffff;
-  --color-canvas-overlay: #ffffff;
-  --color-canvas-inset: #f6f7f4;
-  --color-canvas-subtle: #f6f7f4;
-  --color-fg-default: #101a17;
-  --color-fg-muted: #55645e;
-  --color-fg-subtle: #55645e;
-  --color-border-default: #dfe6e1;
-  --color-border-muted: #dfe6e1;
-  --color-neutral-muted: rgba(11, 93, 63, .08);
-  --color-accent-fg: #0b5d3f;
-  --color-accent-emphasis: #0b5d3f;
-  --color-btn-bg: #ffffff;
-  --color-btn-border: #dfe6e1;
-  --color-btn-text: #101a17;
-  --color-btn-hover-bg: #f6f7f4;
-  --color-btn-primary-bg: #0b5d3f;
-  --color-btn-primary-border: #0b5d3f;
-  --color-btn-primary-text: #ffffff;
-  --color-btn-primary-hover-bg: #084b33;
-  --color-input-bg: #ffffff;
-  --color-input-border: #dfe6e1;
-  --color-input-contrast-bg: #ffffff;
-  --color-header-bg: #ffffff;
-  --color-calendar-graph-day-bg: #dfe6e1;
-  --color-calendar-graph-day-L1-bg: #c5e6d6;
-  --color-calendar-graph-day-L2-bg: #8fcdb0;
-  --color-calendar-graph-day-L3-bg: #4fa77d;
-  --color-calendar-graph-day-L4-bg: #0b5d3f;
+/* HexaGhost Giscus theme. Giscus renders in a cross-origin iframe,
+   so all visual styling is defined here rather than in the host page. */
+main {
+  --color-fg-default: #e4efe9;
+  --color-fg-muted: #91a49b;
+  --color-fg-subtle: #91a49b;
+  --color-canvas-default: #0e1613;
+  --color-canvas-overlay: #16211d;
+  --color-canvas-inset: #0a110e;
+  --color-canvas-subtle: #16211d;
+  --color-border-default: #25332d;
+  --color-border-muted: #25332d;
+  --color-neutral-muted: rgba(127, 224, 180, .12);
+  --color-accent-fg: #7fe0b4;
+  --color-accent-emphasis: #287b58;
+  --color-accent-muted: rgba(127, 224, 180, .35);
+  --color-accent-subtle: rgba(127, 224, 180, .09);
+  --color-btn-text: #e4efe9;
+  --color-btn-bg: #16211d;
+  --color-btn-border: #30443a;
+  --color-btn-hover-bg: #203129;
+  --color-btn-hover-border: #7fe0b4;
+  --color-btn-active-bg: #253b30;
+  --color-btn-active-border: #7fe0b4;
+  --color-btn-primary-text: #0e1613;
+  --color-btn-primary-bg: #7fe0b4;
+  --color-btn-primary-border: #7fe0b4;
+  --color-btn-primary-hover-bg: #a0ebc8;
+  --color-btn-primary-hover-border: #a0ebc8;
+  --color-btn-primary-disabled-text: rgba(14, 22, 19, .6);
+  --color-btn-primary-disabled-bg: rgba(127, 224, 180, .5);
+  --color-input-bg: #0a110e;
+  --color-input-border: #30443a;
+  --color-input-contrast-bg: #0a110e;
+  --color-social-reaction-bg-hover: rgba(127, 224, 180, .12);
+  --color-social-reaction-bg-reacted-hover: rgba(127, 224, 180, .2);
+  --color-success-fg: #7fe0b4;
+  --color-danger-fg: #ff8e8e;
+  --color-attention-fg: #e8c879;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-    --color-canvas-default: #16211d;
-    --color-canvas-overlay: #16211d;
-    --color-canvas-inset: #0e1613;
-    --color-canvas-subtle: #0e1613;
-    --color-fg-default: #e4efe9;
-    --color-fg-muted: #91a49b;
-    --color-fg-subtle: #91a49b;
-    --color-border-default: #25332d;
-    --color-border-muted: #25332d;
-    --color-neutral-muted: rgba(127, 224, 180, .1);
-    --color-accent-fg: #7fe0b4;
-    --color-accent-emphasis: #7fe0b4;
-    --color-btn-bg: #16211d;
-    --color-btn-border: #25332d;
-    --color-btn-text: #e4efe9;
-    --color-btn-hover-bg: #1d2b25;
-    --color-btn-primary-bg: #7fe0b4;
-    --color-btn-primary-border: #7fe0b4;
-    --color-btn-primary-text: #0e1613;
-    --color-btn-primary-hover-bg: #a0ebc8;
-    --color-input-bg: #0e1613;
-    --color-input-border: #25332d;
-    --color-input-contrast-bg: #0e1613;
-    --color-header-bg: #16211d;
-    --color-calendar-graph-day-bg: #25332d;
-    --color-calendar-graph-day-L1-bg: #244d3b;
-    --color-calendar-graph-day-L2-bg: #286b4b;
-    --color-calendar-graph-day-L3-bg: #45966c;
-    --color-calendar-graph-day-L4-bg: #7fe0b4;
+@media (prefers-color-scheme: light) {
+  main {
+    --color-fg-default: #101a17;
+    --color-fg-muted: #55645e;
+    --color-fg-subtle: #6a7972;
+    --color-canvas-default: #f6f7f4;
+    --color-canvas-overlay: #ffffff;
+    --color-canvas-inset: #eef1ed;
+    --color-canvas-subtle: #ffffff;
+    --color-border-default: #dfe6e1;
+    --color-border-muted: #e7ece8;
+    --color-neutral-muted: rgba(11, 93, 63, .08);
+    --color-accent-fg: #0b5d3f;
+    --color-accent-emphasis: #0b5d3f;
+    --color-accent-muted: rgba(11, 93, 63, .25);
+    --color-accent-subtle: rgba(11, 93, 63, .08);
+    --color-btn-text: #101a17;
+    --color-btn-bg: #ffffff;
+    --color-btn-border: #dfe6e1;
+    --color-btn-hover-bg: #f0f5f1;
+    --color-btn-hover-border: #0b5d3f;
+    --color-btn-active-bg: #e5eee8;
+    --color-btn-active-border: #0b5d3f;
+    --color-btn-primary-text: #ffffff;
+    --color-btn-primary-bg: #0b5d3f;
+    --color-btn-primary-border: #0b5d3f;
+    --color-btn-primary-hover-bg: #084b33;
+    --color-btn-primary-hover-border: #084b33;
+    --color-btn-primary-disabled-text: rgba(255, 255, 255, .65);
+    --color-btn-primary-disabled-bg: rgba(11, 93, 63, .5);
+    --color-input-bg: #ffffff;
+    --color-input-border: #dfe6e1;
+    --color-input-contrast-bg: #ffffff;
+    --color-social-reaction-bg-hover: rgba(11, 93, 63, .08);
+    --color-social-reaction-bg-reacted-hover: rgba(11, 93, 63, .14);
+    --color-success-fg: #0b7a4b;
+    --color-danger-fg: #c73535;
+    --color-attention-fg: #8a6412;
   }
 }
-.gsc-main, .gsc-comments, .gsc-comment-box, .gsc-timeline {
+main, .gsc-main, .gsc-comments, .gsc-comment-box, .gsc-timeline {
   font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif !important;
 }
-.gsc-comment-box, .gsc-comment {
-  border-radius: 12px !important;
+.gsc-comment-box, .gsc-comment, .gsc-reply {
+  border-radius: 14px !important;
 }
-.gsc-comment-box textarea {
-  border-radius: 9px !important;
+.gsc-comment-box textarea, .gsc-comment-box textarea:focus {
+  border-radius: 10px !important;
 }
-button, .btn {
-  border-radius: 9px !important;
+.gsc-comment {
+  border-color: var(--color-border-default) !important;
+}
+.gsc-comment-box {
+  border-color: var(--color-border-default) !important;
+}
+.gsc-header {
+  padding-bottom: 1rem;
+}
+.gsc-homepage-bg {
+  background: transparent !important;
 }
