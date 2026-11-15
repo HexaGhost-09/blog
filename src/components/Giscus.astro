@@ -4,6 +4,7 @@ const repoId = 'R_kgDOVmddxQ';
 const category = 'General';
 const categoryId = 'DIC_kwDOVmddxc4DLMas';
 const configured = Boolean(repoId && categoryId);
+const theme = 'https://raw.githubusercontent.com/HexaGhost-09/blog/main/public/giscus-theme.css';
 ---
 
 <div class="giscus-shell">
@@ -15,6 +16,7 @@ const configured = Boolean(repoId && categoryId);
       data-repo-id={repoId}
       data-category={category}
       data-category-id={categoryId}
+      data-theme={theme}
     ></div>
   ) : (
     <p class="giscus-setup">Comments are ready to connect. Add the Giscus repository and category IDs to the site's public environment variables to activate the discussion widget.</p>
@@ -31,14 +33,14 @@ const configured = Boolean(repoId && categoryId);
     const config: Record<string, string> = {
       repo: container.dataset.repo ?? '',
       'repo-id': container.dataset.repoId ?? '',
-      category: container.dataset.category ?? 'Comments',
+      category: container.dataset.category ?? 'General',
       'category-id': container.dataset.categoryId ?? '',
       mapping: 'pathname',
       strict: '0',
       'reactions-enabled': '1',
       'emit-metadata': '0',
       'input-position': 'bottom',
-      theme: 'preferred_color_scheme',
+      theme: container.dataset.theme ?? 'preferred_color_scheme',
       lang: 'en',
       loading: 'lazy',
     };
