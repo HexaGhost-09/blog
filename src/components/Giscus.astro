@@ -8,24 +8,31 @@ const configured = Boolean(repoId && categoryId);
 
 <div class="giscus-shell">
   {configured ? (
-    <div class="giscus" data-giscus></div>
+    <div
+      class="giscus"
+      data-giscus
+      data-repo={repo}
+      data-repo-id={repoId}
+      data-category={category}
+      data-category-id={categoryId}
+    ></div>
   ) : (
     <p class="giscus-setup">Comments are ready to connect. Add the Giscus repository and category IDs to the site's public environment variables to activate the discussion widget.</p>
   )}
 </div>
 
-{configured && <script is:inline define:vars={{ repo, repoId, category, categoryId }}>
-  const container = document.querySelector('[data-giscus]');
+<script>
+  const container = document.querySelector<HTMLElement>('[data-giscus]');
   if (container && !container.querySelector('script')) {
     const script = document.createElement('script');
     script.src = 'https://giscus.app/client.js';
     script.async = true;
     script.crossOrigin = 'anonymous';
-    const config = {
-      repo,
-      'repo-id': repoId,
-      category,
-      'category-id': categoryId,
+    const config: Record<string, string> = {
+      repo: container.dataset.repo ?? '',
+      'repo-id': container.dataset.repoId ?? '',
+      category: container.dataset.category ?? 'Comments',
+      'category-id': container.dataset.categoryId ?? '',
       mapping: 'pathname',
       strict: '0',
       'reactions-enabled': '1',
@@ -40,4 +47,4 @@ const configured = Boolean(repoId && categoryId);
     }
     container.appendChild(script);
   }
-</script>}
+</script>
