@@ -1,73 +1,41 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Giscus from '../../components/Giscus.astro';
-import { getCollection, render } from 'astro:content';
+import { sanity, postQuery } from '../../lib/sanity';
+import { marked } from 'marked';
 
-export async function getStaticPaths() {
-  const posts = await getCollection('blog', ({ data }) => !data.draft);
-  return posts.map((post) => ({ params: { id: post.id }, props: { post } }));
+const posts = await sanity.fetch(postQuery);
+export function getStaticPaths() {
+  return [];
 }
-
-const { post } = Astro.props;
-const { Content } = await render(post);
+const post = posts.find((item: any) => item.slug === Astro.params.id);
+if (!post) return Astro.redirect('/blog/');
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const imageUrl = (src: string) => /^https?:\/\//.test(src) ? src : base + '/' + src.replace(/^\/+/, '');
-const date = post.data.pubDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-const canonicalUrl = new URL(base + '/blog/' + post.id + '/', Astro.site ?? Astro.url).toString();
-const author = post.data.author || 'HexaGhost';
+const date = new Date(post.publishedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+const canonicalUrl = new URL(base + '/blog/' + post.slug + '/', Astro.site ?? Astro.url).toString();
+const author = post.author || 'HexaGhost';
+const bodyHtml = marked.parse(post.bodyMarkdown || '') as string;
 ---
-
-<Base title={post.data.title} description={post.data.description}>
+<Base title={post.title} description={post.description}>
   <article class="post">
     <header class="post-header">
-      {post.data.image && (
-        <img class="post-cover" src={imageUrl(post.data.image.src)} alt={post.data.image.alt} fetchpriority="high" />
-      )}
-      <p class="eyebrow">BLOG / ARTICLE</p>
-      <h1>{post.data.title}</h1>
-      {post.data.description && <p class="post-deck">{post.data.description}</p>}
+      {post.coverUrl && <img class="post-cover" src={post.coverUrl} alt={post.coverAlt || ''} fetchpriority="high" />}
+      <p class="eyebrow">BLOG / ARTICLE</p><h1>{post.title}</h1>
+      {post.description && <p class="post-deck">{post.description}</p>}
       <div class="meta">
         <span class="post-author"><span class="author-avatar" aria-hidden="true">{author.slice(0, 1).toUpperCase()}</span>By <strong>{author}</strong></span>
-        <span aria-hidden="true">·</span>
-        <time datetime={post.data.pubDate.toISOString()}>{date}</time>
-        {post.data.tags.length > 0 && <span class="tags">{post.data.tags.map((t) => <span>{t}</span>)}</span>}
+        <span aria-hidden="true">·</span><time datetime={post.publishedAt}>{date}</time>
+        {post.tags?.length > 0 && <span class="tags">{post.tags.map((t: string) => <span>{t}</span>)}</span>}
       </div>
       <div class="post-actions" aria-label="Share this article">
-        <button class="action-button share-button" type="button" data-share data-title={post.data.title} data-url={canonicalUrl}>
-          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.7 10.7 6.6-4.4M8.7 13.3l6.6 4.4"/></svg>
-          <span>Share</span>
-        </button>
-        <button class="action-button" type="button" data-copy-link data-url={canonicalUrl}>
-          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
-          <span>Copy link</span>
-        </button>
+        <button class="action-button share-button" type="button" data-share data-title={post.title} data-url={canonicalUrl}><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.7 10.7 6.6-4.4M8.7 13.3l6.6 4.4"/></svg><span>Share</span></button>
+        <button class="action-button" type="button" data-copy-link data-url={canonicalUrl}><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg><span>Copy link</span></button>
         <span class="share-status" data-share-status role="status" aria-live="polite"></span>
       </div>
     </header>
-
-    <div class="prose"><Content /></div>
-
-    <section class="author-card" aria-label="About the author">
-      <div class="author-avatar author-avatar-large" aria-hidden="true">{author.slice(0, 1).toUpperCase()}</div>
-      <div>
-        <p class="eyebrow">WRITTEN BY</p>
-        <h2>{author}</h2>
-        <p>Building things, exploring technology and documenting what I learn.</p>
-        <a href="https://github.com/HexaGhost-09" target="_blank" rel="noreferrer">Explore on GitHub ↗</a>
-      </div>
-    </section>
-
-    <section class="comments-section" aria-labelledby="comments-title">
-      <div class="comments-heading">
-        <div>
-          <p class="eyebrow">JOIN THE CONVERSATION</p>
-          <h2 id="comments-title">Comments</h2>
-        </div>
-        <span class="comments-note">Powered by GitHub Discussions</span>
-      </div>
-      <Giscus />
-    </section>
-
+    <div class="prose" set:html={bodyHtml} />
+    <section class="author-card" aria-label="About the author"><div class="author-avatar author-avatar-large" aria-hidden="true">{author.slice(0, 1).toUpperCase()}</div><div><p class="eyebrow">WRITTEN BY</p><h2>{author}</h2><p>Building things, exploring technology and documenting what I learn.</p><a href="https://github.com/HexaGhost-09" target="_blank" rel="noreferrer">Explore on GitHub ↗</a></div></section>
+    <section class="comments-section" aria-labelledby="comments-title"><div class="comments-heading"><div><p class="eyebrow">JOIN THE CONVERSATION</p><h2 id="comments-title">Comments</h2></div><span class="comments-note">Powered by GitHub Discussions</span></div><Giscus /></section>
     <a class="back" href={base + '/blog/'}>← All blog posts</a>
   </article>
   <script is:inline>
@@ -76,24 +44,8 @@ const author = post.data.author || 'HexaGhost';
       const copyButton = document.querySelector('[data-copy-link]');
       const status = document.querySelector('[data-share-status]');
       const announce = (message) => { if (status) status.textContent = message; };
-      const copy = async (url) => {
-        try {
-          await navigator.clipboard.writeText(url);
-          announce('Link copied.');
-        } catch {
-          announce('Copy is unavailable in this browser. Select the page URL to copy it.');
-        }
-      };
-      shareButton?.addEventListener('click', async () => {
-        const title = shareButton.dataset.title || document.title;
-        const url = shareButton.dataset.url || location.href;
-        if (navigator.share) {
-          try { await navigator.share({ title, url }); }
-          catch (error) { if (error?.name !== 'AbortError') await copy(url); }
-        } else {
-          await copy(url);
-        }
-      });
+      const copy = async (url) => { try { await navigator.clipboard.writeText(url); announce('Link copied.'); } catch { announce('Copy is unavailable in this browser. Select the page URL to copy it.'); } };
+      shareButton?.addEventListener('click', async () => { const title = shareButton.dataset.title || document.title; const url = shareButton.dataset.url || location.href; if (navigator.share) { try { await navigator.share({ title, url }); } catch (error) { if (error?.name !== 'AbortError') await copy(url); } } else await copy(url); });
       copyButton?.addEventListener('click', () => copy(copyButton.dataset.url || location.href));
     })();
   </script>
