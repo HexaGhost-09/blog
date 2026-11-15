@@ -3,6 +3,9 @@ title: Preparing for a ChromeOS Brunch installation
 description: A practical pre-installation checklist for checking compatibility, preparing media and protecting your data.
 pubDate: 2026-11-06
 tags: [chromeos, brunch, linux]
+image:
+  src: /images/chromeos-brunch.svg
+  alt: Laptop illustration representing a ChromeOS installation environment
 ---
 
 A ChromeOS Brunch installation is easier to troubleshoot when the preparation is done carefully. Before changing partitions or writing an image, confirm that the target hardware and recovery image are compatible.
