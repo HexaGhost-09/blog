@@ -15,4 +15,4 @@ export const GET: APIRoute = async () => {
     headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=300' },
   });
 };
-export const prerender = false;
+export const prerender = true;
