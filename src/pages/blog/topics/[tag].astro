@@ -4,8 +4,8 @@ import { sanity, postQuery } from '../../../lib/sanity';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const allPosts = await sanity.fetch(postQuery);
 const tags = [...new Set(allPosts.flatMap((post: any) => post.tags || []))];
-export function getStaticPaths() {
-  return [];
+export async function getStaticPaths() {
+  return tags.map((tag: string) => ({ params: { tag: tag.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') } }));
 }
 const tagSlug = Astro.params.tag || '';
 const name = tags.find((tag: string) => tag.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') === tagSlug) || tagSlug;
