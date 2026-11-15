@@ -1,0 +1,32 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const posts = await getCollection('blog', ({ data }) => !data.draft);
+const topics = [...new Set(posts.flatMap((post) => post.data.tags))]
+  .sort((a, b) => a.localeCompare(b))
+  .map((name) => ({
+    name,
+    slug: name.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
+    count: posts.filter((post) => post.data.tags.some((tag) => tag.toLowerCase() === name.toLowerCase())).length,
+  }));
+---
+
+<Base title="Browse topics" description="Explore HexaGhost articles grouped by topic.">
+  <section class="blog-index topics-index">
+    <p class="eyebrow">EXPLORE THE ARCHIVE</p>
+    <h1>Browse topics</h1>
+    <p class="intro">Choose a topic to see related guides, notes and experiments.</p>
+    <p class="topic-total">{topics.length} topics · {posts.length} articles</p>
+    <div class="topic-grid">
+      {topics.map((topic) => (
+        <a class="topic-card" href={base + '/blog/topics/' + topic.slug + '/'}>
+          <span class="topic-name">{topic.name}</span>
+          <span class="topic-count">{topic.count} {topic.count === 1 ? 'post' : 'posts'} <span aria-hidden="true">↗</span></span>
+        </a>
+      ))}
+    </div>
+    <a class="back" href={base + '/blog/'}>← All blog posts</a>
+  </section>
+</Base>
