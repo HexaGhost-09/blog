@@ -289,3 +289,36 @@ h1, h2, h3 { font-family: var(--font-head); line-height: 1.15; letter-spacing: -
   .site-nav a span { display: none; }
   .menu-toggle { padding: .4rem; }
 }
+
+
+/* Topic archives and Giscus comments */
+.archive-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: 1.25rem 0 2rem; }
+.archive-link { display: inline-flex; align-items: center; gap: .45rem; padding: .6rem .85rem; border: 1px solid var(--rule); border-radius: 9px; background: var(--surface); color: var(--accent); font: 700 .85rem var(--font-head); text-decoration: none; }
+.archive-link:hover, .topic-card:hover { border-color: var(--accent); background: var(--accent-soft); }
+.archive-count, .topic-total { color: var(--muted); font: .82rem var(--font-head); }
+.year-group { margin-top: 2.2rem; }
+.year-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding-bottom: .65rem; border-bottom: 1px solid var(--rule); }
+.year-heading h2 { margin: 0; font-size: 1.45rem; }
+.year-heading span { color: var(--muted); font: .78rem var(--font-head); }
+.year-group .posts { margin-top: 1rem; }
+.year-group .post-card h3 { margin: 0 0 .35rem; color: var(--ink); font: 700 1.3rem/1.2 var(--font-head); }
+.topic-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; margin-top: 1.25rem; }
+.topic-card { display: flex; align-items: center; justify-content: space-between; gap: .75rem; min-width: 0; padding: 1rem; border: 1px solid var(--rule); border-radius: 12px; background: var(--surface); color: var(--ink); text-decoration: none; transition: border-color .15s, background .15s; }
+.topic-name { overflow-wrap: anywhere; font: 700 .98rem var(--font-head); text-transform: capitalize; }
+.topic-count { flex: 0 0 auto; color: var(--muted); font: .75rem var(--font-head); }
+.topic-count span { color: var(--accent); }
+.topic-page .posts { margin-top: 1.5rem; }
+.comments-section { margin: 2.5rem 0 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); }
+.comments-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+.comments-heading .eyebrow { margin: 0 0 .3rem; color: var(--accent); font: 800 .72rem var(--font-head); letter-spacing: .14em; }
+.comments-heading h2 { margin: 0; font-size: 1.45rem; }
+.comments-note { color: var(--muted); font: .72rem var(--font-head); }
+.giscus-shell { min-width: 0; width: 100%; }
+.giscus { min-height: 8rem; }
+.giscus iframe { max-width: 100%; }
+.giscus-setup { padding: 1rem; border: 1px dashed var(--rule); border-radius: 10px; background: var(--accent-soft); color: var(--muted); font: .85rem/1.6 var(--font-head); }
+@media (max-width: 560px) {
+  .topic-grid { grid-template-columns: 1fr; }
+  .archive-toolbar { align-items: flex-start; }
+  .comments-heading { align-items: flex-start; flex-direction: column; }
+}
