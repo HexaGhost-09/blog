@@ -5,8 +5,8 @@ import { sanity, postQuery } from '../../lib/sanity';
 import { marked } from 'marked';
 
 const posts = await sanity.fetch(postQuery);
-export function getStaticPaths() {
-  return [];
+export async function getStaticPaths() {
+  return posts.map((post: any) => ({ params: { id: post.slug } }));
 }
 const post = posts.find((item: any) => item.slug === Astro.params.id);
 if (!post) return Astro.redirect('/blog/');
