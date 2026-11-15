@@ -3,6 +3,9 @@ title: What's inside an Android APK?
 description: Understand the main files in an APK and how resources, metadata and DEX bytecode fit together.
 pubDate: 2026-11-04
 tags: [android, apk, reverse-engineering]
+image:
+  src: /images/apk-anatomy.svg
+  alt: Layered package illustration representing the files inside an Android APK
 ---
 
 An Android APK is an installable package. Under the hood, it is a ZIP archive containing an app's compiled code, resources, manifest and signing information.
