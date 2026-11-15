@@ -10,13 +10,23 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const imageUrl = (src: string) => /^https?:\/\//.test(src) ? src : base + '/' + src.replace(/^\/+/, '');
 const date = post.data.pubDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 ---
 
 <Base title={post.data.title} description={post.data.description}>
   <article class="post">
-    <header><h1>{post.data.title}</h1><div class="meta"><time datetime={post.data.pubDate.toISOString()}>{date}</time>{post.data.tags.length > 0 && <span class="tags">{post.data.tags.map((t) => <span>{t}</span>)}</span>}</div></header>
+    <header>
+      {post.data.image && (
+        <img class="post-cover" src={imageUrl(post.data.image.src)} alt={post.data.image.alt} fetchpriority="high" />
+      )}
+      <h1>{post.data.title}</h1>
+      <div class="meta">
+        <time datetime={post.data.pubDate.toISOString()}>{date}</time>
+        {post.data.tags.length > 0 && <span class="tags">{post.data.tags.map((t) => <span>{t}</span>)}</span>}
+      </div>
+    </header>
     <div class="prose"><Content /></div>
-    <a class="back" href={`${base}/blog/`}>← All blog posts</a>
+    <a class="back" href={base + '/blog/'}>← All blog posts</a>
   </article>
 </Base>
