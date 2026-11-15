@@ -3,6 +3,9 @@ title: Understanding Android work profiles
 description: How Android work profiles separate managed apps and data from a personal profile.
 pubDate: 2026-11-03
 tags: [android, privacy, work-profile]
+image:
+  src: /images/work-profiles.svg
+  alt: Smartphone illustration showing separate personal and work app spaces
 ---
 
 Android work profiles provide a separate space for work-managed apps and data on a device. They are designed to keep an organization's apps and information distinct from the personal side of the phone.
