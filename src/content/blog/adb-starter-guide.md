@@ -3,6 +3,9 @@ title: A practical introduction to Android ADB
 description: Set up Android Debug Bridge, verify a device connection and use a few everyday commands.
 pubDate: 2026-11-05
 tags: [android, adb, tutorials]
+image:
+  src: /images/adb-guide.svg
+  alt: Terminal window showing an Android device connected through ADB
 ---
 
 Android Debug Bridge (ADB) is a command-line tool for communicating with an Android device. It is useful for debugging, installing APKs, collecting logs and managing files.
