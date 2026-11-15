@@ -1,42 +1,22 @@
 ---
 import Base from '../../../layouts/Base.astro';
-import { getCollection } from 'astro:content';
-
-export async function getStaticPaths() {
-  const posts = await getCollection('blog', ({ data }) => !data.draft);
-  const topics = [...new Set(posts.flatMap((post) => post.data.tags))];
-  return topics.map((name) => ({
-    params: { tag: name.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') },
-    props: { name },
-  }));
-}
-
-const { name } = Astro.props;
+import { sanity, postQuery } from '../../../lib/sanity';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const posts = (await getCollection('blog', ({ data }) => !data.draft))
-  .filter((post) => post.data.tags.some((tag) => tag.toLowerCase() === name.toLowerCase()))
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+const allPosts = await sanity.fetch(postQuery);
+const tags = [...new Set(allPosts.flatMap((post: any) => post.tags || []))];
+export function getStaticPaths() {
+  return [];
+}
+const tagSlug = Astro.params.tag || '';
+const name = tags.find((tag: string) => tag.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') === tagSlug) || tagSlug;
+const posts = allPosts.filter((post: any) => post.tags?.some((tag: string) => tag.toLowerCase() === name.toLowerCase()));
+const fmt = (value: string) => new Date(value).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 ---
-
 <Base title={name + ' articles'} description={'Articles filed under ' + name + '.'}>
   <section class="blog-index topic-page">
-    <p class="eyebrow">TOPIC ARCHIVE</p>
-    <h1>{name}</h1>
+    <p class="eyebrow">TOPIC ARCHIVE</p><h1>{name}</h1>
     <p class="intro">{posts.length} {posts.length === 1 ? 'article' : 'articles'} filed under this topic.</p>
-    <ul class="posts">
-      {posts.map((post) => (
-        <li class="post-card">
-          <a href={base + '/blog/' + post.id + '/'}>
-            <div class="post-card-content">
-              <time datetime={post.data.pubDate.toISOString()}>{fmt(post.data.pubDate)}</time>
-              <h2>{post.data.title}</h2>
-              <p>{post.data.description}</p>
-            </div>
-          </a>
-        </li>
-      ))}
-    </ul>
+    <ul class="posts">{posts.map((post: any) => <li class="post-card"><a href={base + '/blog/' + post.slug + '/'}><div class="post-card-content"><time datetime={post.publishedAt}>{fmt(post.publishedAt)}</time><h2>{post.title}</h2><p>{post.description}</p></div></a></li>)}</ul>
     <a class="back" href={base + '/blog/topics/'}>← All topics</a>
   </section>
 </Base>
