@@ -1,16 +1,12 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { getCollection } from 'astro:content';
+import { sanity, postQuery } from '../../lib/sanity';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const imageUrl = (src: string) => /^https?:\/\//.test(src) ? src : base + '/' + src.replace(/^\/+/, '');
-const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
-const years = [...new Set(posts.map((post) => post.data.pubDate.getFullYear()))].sort((a, b) => b - a);
-const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+const posts = await sanity.fetch(postQuery);
+const years = [...new Set(posts.map((post: any) => new Date(post.publishedAt).getFullYear()))].sort((a: number, b: number) => b - a);
+const fmt = (value: string) => new Date(value).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 ---
-
 <Base title="All blog posts" description="Browse every article and guide published on HexaGhost.">
   <section class="blog-index">
     <p class="eyebrow">THE ARCHIVE</p>
@@ -20,33 +16,21 @@ const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 
       <a class="archive-link" href={base + '/blog/topics/'}>Browse by topic <span aria-hidden="true">→</span></a>
       <span class="archive-count">{posts.length} {posts.length === 1 ? 'article' : 'articles'}</span>
     </div>
-    {posts.length === 0 ? (
-      <p class="empty">No published posts yet.</p>
-    ) : (
-      years.map((year) => (
-        <section class="year-group" aria-labelledby={`year-${year}`}>
-          <div class="year-heading">
-            <h2 id={`year-${year}`}>{year}</h2>
-            <span>{posts.filter((post) => post.data.pubDate.getFullYear() === year).length} posts</span>
-          </div>
-          <ul class="posts">
-            {posts.filter((post) => post.data.pubDate.getFullYear() === year).map((post) => (
-              <li class="post-card">
-                <a href={base + '/blog/' + post.id + '/'}>
-                  {post.data.image && <img class="post-card-cover" src={imageUrl(post.data.image.src)} alt={post.data.image.alt} loading="lazy" />}
-                  <div class="post-card-content">
-                    <time datetime={post.data.pubDate.toISOString()}>{fmt(post.data.pubDate)}</time>
-                    <h3>{post.data.title}</h3>
-                    <p>{post.data.description}</p>
-                    {post.data.tags.length > 0 && <div class="archive-tags">{post.data.tags.map((tag) => <span>{tag}</span>)}</div>}
-                  </div>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ))
-    )}
+    {years.map((year: number) => (
+      <section class="year-group" aria-labelledby={`year-${year}`}>
+        <div class="year-heading"><h2 id={`year-${year}`}>{year}</h2><span>{posts.filter((p: any) => new Date(p.publishedAt).getFullYear() === year).length} posts</span></div>
+        <ul class="posts">
+          {posts.filter((p: any) => new Date(p.publishedAt).getFullYear() === year).map((post: any) => (
+            <li class="post-card"><a href={base + '/blog/' + post.slug + '/'}>
+              {post.coverUrl && <img class="post-card-cover" src={post.coverUrl} alt={post.coverAlt || ''} loading="lazy" />}
+              <div class="post-card-content"><time datetime={post.publishedAt}>{fmt(post.publishedAt)}</time><h3>{post.title}</h3><p>{post.description}</p>
+                {post.tags?.length > 0 && <div class="archive-tags">{post.tags.map((tag: string) => <span>{tag}</span>)}</div>}
+              </div>
+            </a></li>
+          ))}
+        </ul>
+      </section>
+    ))}
     <a class="back" href={base + '/'}>← Back to home</a>
   </section>
 </Base>
