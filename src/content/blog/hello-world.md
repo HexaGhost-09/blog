@@ -3,6 +3,9 @@ title: Welcome to HexaGhost
 description: A place for practical notes on Android, Linux, ChromeOS and the tools behind the projects.
 pubDate: 2026-11-07
 tags: [welcome, meta]
+image:
+  src: /images/welcome.svg
+  alt: Abstract geometric emblem representing the HexaGhost technical notebook
 ---
 
 Welcome. This blog is a notebook for the technical things worth documenting: the setup that finally worked, the command that solved a problem, and the lessons learned along the way.
