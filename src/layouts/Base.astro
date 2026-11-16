@@ -11,6 +11,14 @@ interface Props {
 
 const { title, description = 'HexaGhost explores software, open-source projects, Android, Linux, automation and the open web.', image, imageAlt = description, type = 'website' } = Astro.props;
 const siteName = 'HexaGhost';
+const shorten = (value: string, limit: number) => {
+  const clean = value.replace(/\\s+/g, ' ').trim();
+  if (clean.length <= limit) return clean;
+  return clean.slice(0, limit - 1).replace(/\\s+\\S*$/, '') + '…';
+};
+const metaDescription = shorten(description, 155);
+const socialDescription = shorten(description, 125);
+const socialImage = image || new URL('/og-default.svg', Astro.site ?? Astro.url).toString();
 const fullTitle = title === siteName ? title : `${title} | ${siteName}`;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
@@ -30,7 +38,7 @@ const websiteSchema = {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="google-site-verification" content="C_kQ_v08-6pzV-IAF1hTHyN19QVdmv71iBxOF_14bDc" />
-    <meta name="description" content={description} />
+    <meta name="description" content={metaDescription} />
     <meta name="author" content="HexaGhost" />
     <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
     <meta name="theme-color" content="#090b10" />
@@ -39,22 +47,18 @@ const websiteSchema = {
     <meta property="og:type" content={type} />
     <meta property="og:site_name" content={siteName} />
     <meta property="og:title" content={fullTitle} />
-    <meta property="og:description" content={description} />
+    <meta property="og:description" content={socialDescription} />
     <meta property="og:url" content={canonicalUrl} />
-    {image && <>
-      <meta property="og:image" content={image} />
-      <meta property="og:image:width" content="1200" />
-      <meta property="og:image:height" content="630" />
-      <meta property="og:image:alt" content={imageAlt} />
-    </>}
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={imageAlt} />
     <meta property="og:locale" content="en_IN" />
-    <meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
-    {image && <>
-      <meta name="twitter:image" content={image} />
-      <meta name="twitter:image:alt" content={imageAlt} />
-    </>}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={socialImage} />
+    <meta name="twitter:image:alt" content={imageAlt} />
     <meta name="twitter:title" content={fullTitle} />
-    <meta name="twitter:description" content={description} />
+    <meta name="twitter:description" content={socialDescription} />
     <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
     <script defer src="https://cloud.umami.is/script.js" data-website-id="aa1c4072-e512-4924-901f-78f0e70fb07b"></script>
     <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
