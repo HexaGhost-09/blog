@@ -51,7 +51,7 @@ const fmt = (value: string) => new Date(value).toLocaleDateString('en-GB', { day
   <section class="blog-index topic-page">
     <p class="eyebrow">TOPIC ARCHIVE</p><h1>{name}</h1>
     <p class="intro">{posts.length} {posts.length === 1 ? 'article' : 'articles'} filed under this topic.</p>
-    <ul class="posts">{posts.map((post: any) => <li class="post-card"><a href={base + '/blog/' + post.slug + '/'}><div class="post-card-content"><time datetime={post.publishedAt}>{fmt(post.publishedAt)}</time><h2>{post.title}</h2><p>{post.description}</p></div></a></li>)}</ul>
+    <ul class="posts">{posts.map((post: any) => <li class="post-card"><a href={base + '/blog/' + post.slug + '/'}>{post.coverUrl && <img class="post-card-cover" src={post.coverUrl} alt={post.coverAlt || post.title} loading="lazy" />}<div class="post-card-content"><time datetime={post.publishedAt}>{fmt(post.publishedAt)}</time><h2>{post.title}</h2><p>{post.description}</p></div></a></li>)}</ul>
     <a class="back" href={base + '/blog/topics/'}>← All topics</a>
   </section>
 </Base>
