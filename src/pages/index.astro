@@ -61,7 +61,7 @@ const explorations = [
         <div class="hub-note-list">
           {posts.map((post: any, index: number) => (
             <a class="hub-note" href={base + '/blog/' + post.slug + '/'}>
-              <span class="hub-note-number">0{index + 1}</span>
+              {post.coverUrl ? <img class="hub-note-thumb" src={post.coverUrl} alt={post.coverAlt || post.title} loading="lazy" /> : <span class="hub-note-thumb hub-note-thumb-fallback" aria-hidden="true">H</span>}
               <span class="hub-note-copy"><strong>{post.title}</strong><small>{post.description}</small></span>
               <time datetime={post.publishedAt}>{fmt(post.publishedAt)}</time>
               <span class="hub-note-arrow">↗</span>
