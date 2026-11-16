@@ -19,7 +19,7 @@ const canonicalUrl = new URL(base + '/blog/' + post.slug + '/', Astro.site ?? As
 const author = post.author || 'HexaGhost';
 const bodyHtml = marked.parse(post.bodyMarkdown || '') as string;
 ---
-<Base title={post.title} description={post.description}>
+<Base title={post.title} description={post.description} image={post.coverUrl} imageAlt={post.coverAlt || post.title} type="article">
   <article class="post">
     <header class="post-header">
       {post.coverUrl && <img class="post-cover" src={post.coverUrl} alt={post.coverAlt || ''} fetchpriority="high" />}
