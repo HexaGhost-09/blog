@@ -11,19 +11,21 @@ export default defineConfig({
     ? 'https://hexaghost-09.pntr.dev'
     : 'https://blog666666666667777777777.vercel.app',
 
-  output: isGitHubPagesBuild ? 'static' : 'server',
+  // Both deployments use the domain root. "/blog" is a route, not the deployment base.
+  base: '/',
+  trailingSlash: 'always',
 
+  output: isGitHubPagesBuild ? 'static' : 'server',
   adapter: isGitHubPagesBuild ? undefined : vercel(),
 
   integrations: [
     react(),
     markdoc(),
-
     sanity({
       projectId: 'k4jysu6x',
       dataset: 'production',
       apiVersion: '2026-03-01',
-      useCdn: isGitHubPagesBuild,
+      useCdn: !isGitHubPagesBuild,
       studioBasePath: '/admin',
     }),
   ],
