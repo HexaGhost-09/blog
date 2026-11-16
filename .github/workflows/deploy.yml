@@ -21,7 +21,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Configure GitHub Pages
-        id: pages
         uses: actions/configure-pages@v5
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -30,25 +29,33 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm install
-      - name: Build for Pages URL
+      - name: Build for PNTR custom domain
         env:
           PAGES_BUILD: 'true'
-          PAGES_ORIGIN: ${{ steps.pages.outputs.origin }}
-          PAGES_BASE: ${{ steps.pages.outputs.base_path }}
-        run: npm run build -- --site "$PAGES_ORIGIN" --base "${PAGES_BASE:-/}"
+        run: npm run build
+      - name: Verify generated blog routes
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          root = Path('dist')
+          index = root / 'blog' / 'index.html'
+          assert index.is_file(), 'Missing /blog/ index page'
+          routes = [
+              path for path in (root / 'blog').glob('*/index.html')
+              if path.parent.name != 'topics'
+          ]
+          assert routes, 'No Sanity blog post routes were generated'
+          print(f'Validated {len(routes)} generated blog post routes')
+          PY
       - name: Preserve static assets
         run: touch dist/.nojekyll
       - name: Validate generated stylesheets
-        env:
-          PAGES_BASE: ${{ steps.pages.outputs.base_path }}
         run: |
           python3 - <<'PY'
-          import os
           from pathlib import Path
           from html.parser import HTMLParser
           from urllib.parse import urlsplit, unquote
           root = Path('dist').resolve()
-          base = os.environ.get('PAGES_BASE', '').rstrip('/')
           class Styles(HTMLParser):
               def __init__(self):
                   super().__init__()
@@ -72,11 +79,7 @@ jobs:
                       continue
                   local += 1
                   path = unquote(url.path)
-                  if path.startswith('/'):
-                      assert not base or path.startswith(base + '/'), f'{page}: CSS outside Pages base: {href}'
-                      asset = root / path[len(base):].lstrip('/')
-                  else:
-                      asset = page.parent / path
+                  asset = root / path.lstrip('/') if path.startswith('/') else page.parent / path
                   assert asset.is_file() and asset.stat().st_size, f'{page}: missing CSS: {href}'
               assert local or parser.inline, f'{page}: no local or inline CSS'
           print(f'Validated stylesheets in {len(pages)} HTML pages')
