@@ -3,37 +3,77 @@ import Base from '../layouts/Base.astro';
 import { sanity, postQuery } from '../lib/sanity';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const posts = await sanity.fetch(postQuery);
+const posts = (await sanity.fetch(postQuery)).slice(0, 3);
 const fmt = (value: string) => new Date(value).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+const explorations = [
+  { number: '01', title: 'Linux & open systems', detail: 'Distros, self-hosting, servers and making old hardware useful.', tag: 'LINUX' },
+  { number: '02', title: 'Android & mobile', detail: 'Custom ROMs, system tweaks, apps and the Android ecosystem.', tag: 'ANDROID' },
+  { number: '03', title: 'ChromeOS & beyond', detail: 'Alternative operating systems, workflows and experiments.', tag: 'CHROMEOS' },
+  { number: '04', title: 'Tools & side projects', detail: 'Small utilities, web builds, automation and open-source software.', tag: 'BUILD' },
+];
 ---
 
-<Base title="HexaGhost">
-  <section class="hero">
-    <div class="hero-stickers" aria-hidden="true">
-      <img class="hero-sticker hero-sticker-flame" src={base + '/stickers/Flame.svg'} alt="" width="72" height="80" />
-      <img class="hero-sticker hero-sticker-nori" src={base + '/stickers/nori-laptop.svg'} alt="" width="104" height="104" />
-      <img class="hero-sticker hero-sticker-sparkles" src={base + '/stickers/Sparkles.svg'} alt="" width="54" height="54" />
-    </div>
-    <p class="eyebrow">HEXAGHOST</p>
-    <h1>Build logs & notes</h1>
-    <p>ChromeOS, Linux, Android and the things I tinker with.</p>
-  </section>
-  {posts.length === 0 ? (
-    <p class="empty">No posts yet. Publish your first post from the Sanity admin.</p>
-  ) : (
-    <ul class="posts">
-      {posts.map((post: any) => (
-        <li class="post-card">
-          <a href={base + '/blog/' + post.slug + '/'}>
-            {post.coverUrl && <img class="post-card-cover" src={post.coverUrl} alt={post.coverAlt || ''} loading="lazy" />}
-            <div class="post-card-content">
+<Base title="HexaGhost" description="An independent corner of the internet for software experiments, open systems, Android, Linux and things worth building.">
+  <div class="home-hub">
+    <section class="hub-hero">
+      <div class="hub-orbit hub-orbit-one" aria-hidden="true"></div>
+      <div class="hub-orbit hub-orbit-two" aria-hidden="true"></div>
+      <div class="hub-kicker"><span class="hub-live-dot"></span> PERSONAL DIGITAL SPACE <span class="hub-kicker-line"></span> EST. 2026</div>
+      <p class="hub-intro">CURIOUS BY DEFAULT.</p>
+      <h1>Exploring how<br /><span>things work.</span></h1>
+      <p class="hub-lead">I explore operating systems, open-source software and the edges of everyday technology — from Linux and ChromeOS to Android, self-hosting and the tools I build along the way.</p>
+      <div class="hub-actions">
+        <a class="hub-button hub-button-primary" href={base + '/portfolio/'}>Explore my work <span>↗</span></a>
+        <a class="hub-button hub-button-quiet" href="https://github.com/HexaGhost-09" target="_blank" rel="noreferrer">GitHub <span>↗</span></a>
+      </div>
+      <div class="hub-hero-index"><span>01 / 04</span><span>SCROLL TO EXPLORE ↓</span></div>
+    </section>
+
+    <section class="hub-section">
+      <div class="hub-section-head">
+        <div><p class="hub-label">THE INTERESTS</p><h2>Things I spend time exploring.</h2></div>
+        <span class="hub-section-count">[ 04 FIELDS ]</span>
+      </div>
+      <div class="explore-grid">
+        {explorations.map((item) => (
+          <article class="explore-card">
+            <div class="explore-card-top"><span>{item.number}</span><span class="explore-tag">{item.tag}</span></div>
+            <h3>{item.title}</h3>
+            <p>{item.detail}</p>
+            <span class="explore-arrow" aria-hidden="true">↗</span>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="hub-manifesto">
+      <span class="hub-label">THE APPROACH</span>
+      <p>Break it. Understand it.<br /><span>Make it better.</span></p>
+      <span class="manifesto-note">NOTES FROM THE PROCESS, NOT JUST THE FINISH LINE.</span>
+    </section>
+
+    {posts.length > 0 && (
+      <section class="hub-section hub-notes">
+        <div class="hub-section-head">
+          <div><p class="hub-label">FROM THE WORKBENCH</p><h2>Recent notes & discoveries.</h2></div>
+          <a class="hub-text-link" href={base + '/blog/'}>All writing ↗</a>
+        </div>
+        <div class="hub-note-list">
+          {posts.map((post: any, index: number) => (
+            <a class="hub-note" href={base + '/blog/' + post.slug + '/'}>
+              <span class="hub-note-number">0{index + 1}</span>
+              <span class="hub-note-copy"><strong>{post.title}</strong><small>{post.description}</small></span>
               <time datetime={post.publishedAt}>{fmt(post.publishedAt)}</time>
-              <h2>{post.title}</h2>
-              <p>{post.description}</p>
-            </div>
-          </a>
-        </li>
-      ))}
-    </ul>
-  )}
+              <span class="hub-note-arrow">↗</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+    <section class="hub-end">
+      <p class="hub-label">ENDLESS CURIOSITY. OCCASIONAL COMMITS.</p>
+      <h2>Something interesting<br />starts with a <span>what if?</span></h2>
+      <a href="https://github.com/HexaGhost-09" target="_blank" rel="noreferrer">Find me on GitHub ↗</a>
+    </section>
+  </div>
 </Base>
