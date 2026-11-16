@@ -6,10 +6,19 @@ interface Props {
   description?: string;
 }
 
-const { title, description = 'An independent corner of the internet for software experiments, open systems, Android, Linux and things worth building.' } = Astro.props;
+const { title, description = 'HexaGhost explores software, open-source projects, Android, Linux, automation and the open web.' } = Astro.props;
 const siteName = 'HexaGhost';
 const fullTitle = title === siteName ? title : `${title} | ${siteName}`;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: siteName,
+  url: Astro.site?.toString() ?? 'https://hexaghost-09.pntr.dev/',
+  description: 'Personal website of HexaGhost: developer projects, technical notes and open-source experiments.',
+  inLanguage: 'en',
+};
 ---
 
 <!doctype html>
@@ -18,8 +27,21 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    <meta name="author" content="HexaGhost" />
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
     <meta name="theme-color" content="#090b10" />
     <title>{fullTitle}</title>
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:locale" content="en_IN" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
     <script defer src="https://cloud.umami.is/script.js" data-website-id="aa1c4072-e512-4924-901f-78f0e70fb07b"></script>
     <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
