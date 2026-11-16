@@ -3,12 +3,11 @@ import type { APIRoute } from 'astro';
 export const prerender = true;
 
 export const GET: APIRoute = () => {
-  const site = (import.meta.env.SITE || 'https://hexaghost-09.pntr.dev').replace(/\/$/, '');
   const body = [
     'User-agent: *',
     'Allow: /',
     'Disallow: /admin/',
-    `Sitemap: ${site}/sitemap.xml`,
+    'Sitemap: https://hexaghost-09.pntr.dev/sitemap.xml',
     '',
   ].join('\n');
 
