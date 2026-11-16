@@ -12,9 +12,9 @@ interface Props {
 const { title, description = 'HexaGhost explores software, open-source projects, Android, Linux, automation and the open web.', image, imageAlt = description, type = 'website' } = Astro.props;
 const siteName = 'HexaGhost';
 const shorten = (value: string, limit: number) => {
-  const clean = value.replace(/\\s+/g, ' ').trim();
+  const clean = value.replace(/\s+/g, ' ').trim();
   if (clean.length <= limit) return clean;
-  return clean.slice(0, limit - 1).replace(/\\s+\\S*$/, '') + '…';
+  return clean.slice(0, limit - 1).replace(/\s+\S*$/, '') + '…';
 };
 const metaDescription = shorten(description, 155);
 const socialDescription = shorten(description, 125);
