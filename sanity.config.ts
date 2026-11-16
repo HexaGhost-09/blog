@@ -18,7 +18,7 @@ export default defineConfig({
         { name: 'publishedAt', title: 'Publication date', type: 'datetime', initialValue: () => new Date().toISOString() },
         { name: 'tags', title: 'Tags', type: 'array', of: [{ type: 'string' }] },
         { name: 'draft', title: 'Draft', type: 'boolean', initialValue: false },
-        { name: 'coverImage', title: 'Cover image', type: 'image', options: { hotspot: true }, fields: [{ name: 'alt', title: 'Alternative text', type: 'string' }] },
+        { name: 'coverImage', title: 'Cover image', type: 'image', options: { hotspot: true }, validation: (Rule: any) => Rule.required(), fields: [{ name: 'alt', title: 'Alternative text', type: 'string' }] },
         { name: 'bodyMarkdown', title: 'Post content (Markdown)', type: 'text', rows: 24, validation: (Rule: any) => Rule.required() },
       ],
     }],
