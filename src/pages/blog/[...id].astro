@@ -2,6 +2,9 @@
 import Base from '../../layouts/Base.astro';
 import Giscus from '../../components/Giscus.astro';
 import { sanity, postQuery } from '../../lib/sanity';
+
+// GitHub Pages pre-renders every article; Vercel resolves the requested slug at runtime.
+export const prerender = process.env.PAGES_BUILD === 'true';
 import { marked } from 'marked';
 
 export async function getStaticPaths() {
@@ -11,7 +14,13 @@ export async function getStaticPaths() {
     props: { post },
   }));
 }
-const post = Astro.props.post;
+const post = Astro.props.post ?? await sanity.fetch(
+  `*[_type == "post" && slug.current == $slug && !(_id in path("drafts.**"))][0] {
+    _id, title, "slug": slug.current, description, author, publishedAt, tags,
+    "coverUrl": coverImage.asset->url, "coverAlt": coverImage.alt, bodyMarkdown
+  }`,
+  { slug: Astro.params.id }
+);
 if (!post) return Astro.redirect('/blog/');
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const date = new Date(post.publishedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
