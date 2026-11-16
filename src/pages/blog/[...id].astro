@@ -3,8 +3,6 @@ import Base from '../../layouts/Base.astro';
 import Giscus from '../../components/Giscus.astro';
 import { sanity, postQuery } from '../../lib/sanity';
 
-// GitHub Pages pre-renders every article; Vercel resolves the requested slug at runtime.
-export const prerender = process.env.PAGES_BUILD === 'true';
 import { marked } from 'marked';
 
 export async function getStaticPaths() {
