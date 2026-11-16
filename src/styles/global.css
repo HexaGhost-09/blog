@@ -638,3 +638,13 @@ body { font-family: var(--font-body); }
 @media (prefers-reduced-motion: reduce) {
   .site-sidebar,.sidebar-backdrop { transition:none; }
 }
+
+
+/* Sanity cover thumbnails in homepage post previews */
+.hub-note { grid-template-columns: 4.5rem 2rem minmax(0,1fr) auto 1rem; }
+.hub-note-thumb { display:block; width:4.5rem; aspect-ratio:16/10; object-fit:cover; border:1px solid var(--rule); border-radius:7px; background:var(--surface); }
+.hub-note-thumb-fallback { display:grid; place-items:center; color:var(--accent); font:800 1.4rem var(--font-head); background:linear-gradient(135deg,rgba(183,255,60,.12),var(--surface)); }
+@media(max-width:560px) {
+  .hub-note { grid-template-columns:3.8rem 1.5rem minmax(0,1fr) 1rem; }
+  .hub-note-thumb { width:3.8rem; }
+}
